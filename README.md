@@ -75,85 +75,43 @@ This project is a QA bot that processes PDF files to extract text, generate embe
 
 7. **Manage User Context:**
     ```python
-    from collections import deque
-
-    class UserContext:
-        def __init__(self, max_size=5):
-            self.context = deque(maxlen=max_size)
-
-        def add_interaction(self, user_input, bot_response):
-            self.context.append({'user_input': user_input, 'bot_response': bot_response})
-
-        def get_context(self):
-            return list(self.context)
+Keep track of the last 5 user interactions to provide better query refinement.
     ```
 
 8. **Refine Query with GPT-2:**
     ```python
-    from transformers import pipeline, set_seed
+    Use GPT-2 to refine user queries based on the maintained context for more accurate results.
+     ```
 
-    generaUsage
-Upload a PDF File:
+9. **Retrieve and Present Relevant Text Chunks:**
+    ```python
+    Retrieve and display the most relevant text chunks to the user.    
+    ```
 
-Use the google.colab library to upload the PDF file to the Colab environment.
-Extract Text from PDF:
+## Performance Evaluation
 
-Use pdfplumber to extract text from the uploaded PDF file.
-Segment Text:
+4. **Text Extraction Performance:**
+    ```python
+    Measure the time taken to extract text from PDF files.
+    ```
 
-Split the extracted text into manageable chunks for processing.
-Generate Embeddings:
+5. **Text Segmentation Performance:**
+    ```python
+    Measure the time taken to segment the extracted text into chunks.
+    ```
 
-Utilize the sentence-transformers library to generate embeddings for the text chunks.
-Build FAISS Index:
+6. **Embedding Generation Performance:**
+    ```python
+   Measure the time taken to build the FAISS index.
+    ```
 
-Create a FAISS index to store and manage the embeddings for efficient similarity search.
-Generate Query Embeddings:
-
-Convert user queries into embeddings for comparison against the stored text chunk embeddings.
-Search FAISS Index:
-
-Perform a search on the FAISS index to find the most relevant text chunks based on the query embedding.
-Maintain User Context:
-
-Keep track of the last 5 user interactions to provide better query refinement.
-Refine User Queries with GPT-2:
-
-Use GPT-2 to refine user queries based on the maintained context for more accurate results.
-Retrieve and Present Relevant Text Chunks:
-
-Retrieve and display the most relevant text chunks to the user.
-Performance Evaluation
-Text Extraction Performance:
-
-Measure the time taken to extract text from PDF files.
-Text Segmentation Performance:
-
-Measure the time taken to segment the extracted text into chunks.
-Embedding Generation Performance:
-
-Measure the time taken to generate embeddings for the text chunks.
-FAISS Index Building Performance:
-
-Measure the time taken to build the FAISS index.
-Query Response Performance:
-
+7. **Query Response Performance:**
+    ```python
 Measure the time taken to generate query embeddings and retrieve results from the FAISS index.
-Overall System Performance:
+    ```
 
-Measure the total processing time for the entire workflow from text extraction to query response.
-Documentation
-System Architecture: Include a high-level architecture diagram and description of the system components.
-Implementation Details: Provide details on the implementation of each component and how they interact.
-Deployment Instructions: Provide instructions for setting up and deploying the system.
-Execution Instructions: Provide a step-by-step guide for running the system.
-Performance Evaluation Results: Include a summary of the performance evaluation results.
-Deliverables
-High-Level Architecture Diagram
-Source Code
-README with deployment instructions and performance evaluation results
-Video demonstrating the running application
-Contact
-For any questions or support, please contact [Your Name] at [Your Email].
-        
+8. **Overall System Performance:**
+    ```python
+    Measure the total processing time for the entire workflow from text extraction to query response.
+     ```
        
