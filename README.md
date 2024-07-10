@@ -75,7 +75,7 @@ This project is a QA bot that processes PDF files to extract text, generate embe
 
 7. **Manage User Context:**
     ```python
-Keep track of the last 5 user interactions to provide better query refinement.
+    Keep track of the last 5 user interactions to provide better query refinement.
     ```
 
 8. **Refine Query with GPT-2:**
@@ -107,7 +107,7 @@ Keep track of the last 5 user interactions to provide better query refinement.
 
 4. **Query Response Performance:**
     ```python
-Measure the time taken to generate query embeddings and retrieve results from the FAISS index.
+    Measure the time taken to generate query embeddings and retrieve results from the FAISS index.
     ```
 
 5. **Overall System Performance:**
