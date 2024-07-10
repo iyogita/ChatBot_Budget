@@ -27,7 +27,13 @@ This project is a QA bot that processes PDF files to extract text, generate embe
 
 ## Installation
 
-1. Install the required libraries:
+1. Clone the Repository:
+    ```bash
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
+
+2. Install the required libraries:
     ```bash
     pip install pdfplumber
     pip install sentence-transformers
@@ -39,57 +45,32 @@ This project is a QA bot that processes PDF files to extract text, generate embe
 
 1. **Upload PDF File:**
     ```python
-    from google.colab import files
-    uploaded = files.upload()
-    pdf_path = list(uploaded.keys())[0]
+    Use the google.colab library to upload the PDF file to the Colab environment.
     ```
 
 2. **Extract Text from PDF:**
     ```python
-    import pdfplumber
-
-    def extract_text_from_pdf(pdf_path):
-        with pdfplumber.open(pdf_path) as pdf:
-            text = ""
-            for page in pdf.pages:
-                text += page.extract_text() + "\n"
-        return text
+    Use pdfplumber to extract text from the uploaded PDF file.
     ```
 
 3. **Segment Text:**
     ```python
-    def segment_text(text, chunk_size=512):
-        words = text.split()
-        return [' '.join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
+    Split the extracted text into manageable chunks for processing.    
     ```
 
 4. **Generate Embeddings:**
     ```python
-    from sentence_transformers import SentenceTransformer
-
-    def generate_embeddings(text_chunks):
-        model = SentenceTransformer('all-MiniLM-L6-v2')
-        return model.encode(text_chunks, convert_to_tensor=True, normalize_embeddings=True)
+    Utilize the sentence-transformers library to generate embeddings for the text chunks.
     ```
 
 5. **Build FAISS Index:**
     ```python
-    import faiss
-    import numpy as np
-
-    def build_faiss_index(embeddings):
-        dim = embeddings.shape[1]
-        index = faiss.IndexFlatL2(dim)
-        index.add(np.array(embeddings))
-        return index
+    Create a FAISS index to store and manage the embeddings for efficient similarity search.
     ```
 
 6. **Search FAISS Index:**
     ```python
-    def search_index(index, query_embedding, k=5):
-        query_embedding = np.array(query_embedding).reshape(1, -1).astype('float32')
-        D, I = index.search(query_embedding, k)
-        return I
+    Convert user queries into embeddings for comparison against the stored text chunk embeddings.
     ```
 
 7. **Manage User Context:**
@@ -111,88 +92,68 @@ This project is a QA bot that processes PDF files to extract text, generate embe
     ```python
     from transformers import pipeline, set_seed
 
-    generator = pipeline('text-generation', model='gpt2')
+    generaUsage
+Upload a PDF File:
 
-    def refine_query_with_gpt(user_context, query):
-        set_seed(42)
-        context = user_context.get_context()
-        context_text = "\n".join([f"User: {interaction['user_input']}\nBot: {interaction['bot_response']}" for interaction in context])
-        prompt = f"{context_text}\nUser: {query}\nBot:"
-        response = generator(prompt, max_length=150, num_return_sequences=1)[0]['generated_text']
-        refined_response = response[len(prompt):].strip()
-        return refined_response
-    ```
+Use the google.colab library to upload the PDF file to the Colab environment.
+Extract Text from PDF:
 
-9. **Performance Evaluation:**
-    ```python
-    import time
+Use pdfplumber to extract text from the uploaded PDF file.
+Segment Text:
 
-    def performance_evaluation(pdf_path, query_text):
-        # Text Extraction Performance
-        start_time = time.time()
-        pdf_text = extract_text_from_pdf(pdf_path)
-        end_time = time.time()
-        extraction_time = end_time - start_time
+Split the extracted text into manageable chunks for processing.
+Generate Embeddings:
 
-        # Text Segmentation Performance
-        start_time = time.time()
-        text_chunks = segment_text(pdf_text)
-        end_time = time.time()
-        segmentation_time = end_time - start_time
-        chunk_count = len(text_chunks)
+Utilize the sentence-transformers library to generate embeddings for the text chunks.
+Build FAISS Index:
 
-        # Embedding Generation Performance
-        start_time = time.time()
-        embeddings = generate_embeddings(text_chunks)
-        end_time = time.time()
-        embedding_generation_time = end_time - start_time
-        embedding_size = embeddings.shape[1]
+Create a FAISS index to store and manage the embeddings for efficient similarity search.
+Generate Query Embeddings:
 
-        # FAISS Index Building Performance
-        start_time = time.time()
-        index = build_faiss_index(embeddings)
-        end_time = time.time()
-        index_building_time = end_time - start_time
-        index_size = index.ntotal
+Convert user queries into embeddings for comparison against the stored text chunk embeddings.
+Search FAISS Index:
 
-        # Query Response Performance
-        query_embedding = generate_embeddings([query_text])[0]
-        start_time = time.time()
-        results = search_index(index, query_embedding)
-        end_time = time.time()
-        query_time = end_time - start_time
+Perform a search on the FAISS index to find the most relevant text chunks based on the query embedding.
+Maintain User Context:
 
-        # Overall System Performance
-        total_start_time = time.time()
-        # Complete workflow
-        pdf_text = extract_text_from_pdf(pdf_path)
-        text_chunks = segment_text(pdf_text)
-        embeddings = generate_embeddings(text_chunks)
-        index = build_faiss_index(embeddings)
-        query_embedding = generate_embeddings([query_text])[0]
-        results = search_index(index, query_embedding)
-        total_end_time = time.time()
-        total_processing_time = total_end_time - total_start_time
+Keep track of the last 5 user interactions to provide better query refinement.
+Refine User Queries with GPT-2:
 
-        # Report
-        print(f"Text Extraction Time: {extraction_time} seconds")
-        print(f"Text Segmentation Time: {segmentation_time} seconds")
-        print(f"Number of Chunks: {chunk_count}")
-        print(f"Embedding Generation Time: {embedding_generation_time} seconds")
-        print(f"Embedding Size: {embedding_size}")
-        print(f"Index Building Time: {index_building_time} seconds")
-        print(f"Index Size: {index_size}")
-        print(f"Query Response Time: {query_time} seconds")
-        print(f"Total Processing Time: {total_processing_time} seconds")
-    ```
+Use GPT-2 to refine user queries based on the maintained context for more accurate results.
+Retrieve and Present Relevant Text Chunks:
 
-10. **Context Preservation Test:**
-    ```python
-    def test_context_preservation():
-        user_context = UserContext(max_size=5)
-        
-        # Simulate adding more than 5 interactions
-        for i in range(1, 7):
-            user_context.add_interaction(f"Question {i}", f"Answer {i}")
+Retrieve and display the most relevant text chunks to the user.
+Performance Evaluation
+Text Extraction Performance:
+
+Measure the time taken to extract text from PDF files.
+Text Segmentation Performance:
+
+Measure the time taken to segment the extracted text into chunks.
+Embedding Generation Performance:
+
+Measure the time taken to generate embeddings for the text chunks.
+FAISS Index Building Performance:
+
+Measure the time taken to build the FAISS index.
+Query Response Performance:
+
+Measure the time taken to generate query embeddings and retrieve results from the FAISS index.
+Overall System Performance:
+
+Measure the total processing time for the entire workflow from text extraction to query response.
+Documentation
+System Architecture: Include a high-level architecture diagram and description of the system components.
+Implementation Details: Provide details on the implementation of each component and how they interact.
+Deployment Instructions: Provide instructions for setting up and deploying the system.
+Execution Instructions: Provide a step-by-step guide for running the system.
+Performance Evaluation Results: Include a summary of the performance evaluation results.
+Deliverables
+High-Level Architecture Diagram
+Source Code
+README with deployment instructions and performance evaluation results
+Video demonstrating the running application
+Contact
+For any questions or support, please contact [Your Name] at [Your Email].
         
        
