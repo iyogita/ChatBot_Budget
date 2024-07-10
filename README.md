@@ -90,27 +90,27 @@ Keep track of the last 5 user interactions to provide better query refinement.
 
 ## Performance Evaluation
 
-4. **Text Extraction Performance:**
+1. **Text Extraction Performance:**
     ```python
     Measure the time taken to extract text from PDF files.
     ```
 
-5. **Text Segmentation Performance:**
+2. **Text Segmentation Performance:**
     ```python
     Measure the time taken to segment the extracted text into chunks.
     ```
 
-6. **Embedding Generation Performance:**
+3. **Embedding Generation Performance:**
     ```python
    Measure the time taken to build the FAISS index.
     ```
 
-7. **Query Response Performance:**
+4. **Query Response Performance:**
     ```python
 Measure the time taken to generate query embeddings and retrieve results from the FAISS index.
     ```
 
-8. **Overall System Performance:**
+5. **Overall System Performance:**
     ```python
     Measure the total processing time for the entire workflow from text extraction to query response.
      ```
