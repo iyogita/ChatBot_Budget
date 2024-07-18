@@ -114,8 +114,4 @@ This project is a QA bot that processes PDF files to extract text, generate embe
     ```python
     Measure the total processing time for the entire workflow from text extraction to query response.
      ```
-
-   ```markdown
-    ![Architecture Diagram](Architecture.png)
-    ```
        
